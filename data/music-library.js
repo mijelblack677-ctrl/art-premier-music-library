@@ -58,7 +58,7 @@ export const musicLibrary = {
       artist: "Power Drive",
       album: "Workout Essentials",
       duration: "2:50",
-      audioUrl: "/audio/energy-boost.mp3",
+      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Mborious%20-%20mundimwetse-%20Official_Music_Video_(1080p)_mp4_Output_1.mp3",
       thumbnail: "/thumbnails/energy-boost.jpg",
       genre: "EDM",
       plays: 23410,
