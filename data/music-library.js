@@ -47,7 +47,7 @@ export const musicLibrary = {
       album: "None",
       duration: "2:56",
       audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Mborious%20-%20mundimwetse-%20Official_Music_Video_(1080p)_mp4_Output_1.mp3",
-      thumbnail: "/557706318_122123872796965203_2657091422275619840_n.jpg",
+      thumbnail: "https://api.dicebear.com/7.x/bottts/svg?seed=power",
       genre: "Electronic",
       plays: 15670,
       uploadDate: "2024-01-08"
@@ -71,7 +71,7 @@ export const musicLibrary = {
       album: "None",
       duration: "2:46",
       audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/MBORIOUS%20--%20Ndalandila%20yesu%20....%20official%20music.mp3",
-      thumbnail: "/557706318_122123872796965203_2657091422275619840_n.jpg",
+      thumbnail: "https://api.dicebear.com/7.x/avataaars/svg?seed=summit",
       genre: "Rock",
       plays: 18760,
       uploadDate: "2025-01-03"
@@ -83,7 +83,7 @@ export const musicLibrary = {
       album: "Oasis",
       duration: "3:25",
       audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Laura%20%5BTygon%20On%20The%20Mix%5D.mp3",
-      thumbnail: "/ChatGPT Image Oct 17, 2025, 08_54_55 AM.png",
+      thumbnail: "https://api.dicebear.com/7.x/avataaars/svg?seed=coastal",
       genre: "World",
       plays: 9560,
       uploadDate: "2024-01-01"
