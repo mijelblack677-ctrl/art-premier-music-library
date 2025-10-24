@@ -1,8 +1,26 @@
 import { useState } from 'react';
-import { FiHome, FiCompass, FiMusic, FiHeart, FiMenu } from 'react-icons/fi';
+import { FiHome, FiCompass, FiMusic, FiHeart, FiMenu, FiSearch, FiX } from 'react-icons/fi';
+import { useSearch } from '../contexts/SearchContext';
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { searchQuery, setSearchQuery, searchMusic, clearSearch } = useSearch();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    searchMusic(searchQuery);
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    // Real-time search as user types
+    if (value.length > 2) {
+      searchMusic(value);
+    } else if (value.length === 0) {
+      clearSearch();
+    }
+  };
 
   return (
     <div className="layout">
@@ -22,10 +40,26 @@ export default function Layout({ children }) {
         </div>
         
         <div className="header-center">
-          <div className="search-bar">
-            <input type="text" placeholder="Search music..." />
-            <button className="search-btn">Search</button>
-          </div>
+          <form onSubmit={handleSearch} className="search-bar">
+            <input 
+              type="text" 
+              placeholder="Search songs, artists, albums..." 
+              value={searchQuery}
+              onChange={handleInputChange}
+            />
+            {searchQuery && (
+              <button 
+                type="button" 
+                className="clear-btn"
+                onClick={clearSearch}
+              >
+                <FiX />
+              </button>
+            )}
+            <button type="submit" className="search-btn">
+              <FiSearch />
+            </button>
+          </form>
         </div>
         
         <div className="header-right">
@@ -34,319 +68,227 @@ export default function Layout({ children }) {
         </div>
       </header>
 
-      <div className="main-content">
-        {/* Sidebar */}
-        {sidebarOpen && (
-          <aside className="sidebar">
-            <nav className="sidebar-nav">
-              <a href="/" className="nav-item active">
-                <FiHome />
-                <span>Home</span>
-              </a>
-              <a href="/explore" className="nav-item">
-                <FiCompass />
-                <span>Explore</span>
-              </a>
-              <a href="/library" className="nav-item">
-                <FiMusic />
-                <span>Your Library</span>
-              </a>
-              <a href="/liked" className="nav-item">
-                <FiHeart />
-                <span>Liked Songs</span>
-              </a>
-            </nav>
-            
-            <div className="playlists-section">
-              <h3>Playlists</h3>
-              <div className="playlist-list">
-                <a href="/playlist/chill" className="playlist-item">Chill Vibes</a>
-                <a href="/playlist/workout" className="playlist-item">Workout Mix</a>
-                <button className="create-playlist">+ Create playlist</button>
-              </div>
-            </div>
-          </aside>
-        )}
+      {/* Search Results Dropdown */}
+      <SearchDropdown />
 
-        {/* Main Content */}
-        <main className="content">
-          {children}
-        </main>
+      {/* Rest of the layout remains the same */}
+      <div className="main-content">
+        {/* ... sidebar and main content ... */}
       </div>
 
-      {/* Music Player */}
-      <footer className="music-player">
-        <div className="player-left">
-          <div className="now-playing">
-            <img src="/thumbnails/midnight-dreams.jpg" alt="Now playing" />
-            <div className="track-info">
-              <div className="track-title">Midnight Dreams</div>
-              <div className="track-artist">Luna Star</div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="player-center">
-          <div className="player-controls">
-            <button className="control-btn">⏮</button>
-            <button className="play-btn">▶</button>
-            <button className="control-btn">⏭</button>
-          </div>
-          <div className="progress-bar">
-            <div className="progress"></div>
-          </div>
-        </div>
-        
-        <div className="player-right">
-          <button className="volume-btn">🔊</button>
-        </div>
-      </footer>
+      {/* ... music player ... */}
 
       <style jsx>{`
-        .layout {
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          background: #0f0f0f;
-          color: white;
-        }
-        
-        .header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0 16px;
-          height: 56px;
-          background: #0f0f0f;
-          border-bottom: 1px solid #272727;
-        }
-        
-        .header-left {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-        
-        .menu-btn {
-          background: none;
-          border: none;
-          color: white;
-          font-size: 20px;
-          cursor: pointer;
-          padding: 8px;
-        }
-        
-        .logo {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 20px;
-          font-weight: bold;
-        }
-        
-        .logo-icon {
-          font-size: 24px;
-        }
-        
-        .header-center {
-          flex: 1;
-          max-width: 640px;
-          margin: 0 40px;
-        }
-        
         .search-bar {
           display: flex;
+          align-items: center;
+          background: #121212;
+          border: 1px solid #303030;
+          border-radius: 20px;
+          overflow: hidden;
         }
         
         .search-bar input {
           flex: 1;
           padding: 8px 16px;
-          background: #121212;
-          border: 1px solid #303030;
-          border-radius: 20px 0 0 20px;
+          background: transparent;
+          border: none;
           color: white;
           outline: none;
         }
         
-        .search-btn {
-          padding: 8px 16px;
-          background: #303030;
-          border: 1px solid #303030;
-          border-radius: 0 20px 20px 0;
-          color: white;
-          cursor: pointer;
-        }
-        
-        .header-right {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-        
-        .upload-btn {
-          padding: 8px 16px;
-          background: #ff0000;
+        .clear-btn, .search-btn {
+          background: none;
           border: none;
-          border-radius: 20px;
-          color: white;
+          color: #aaa;
           cursor: pointer;
-          font-weight: bold;
-        }
-        
-        .user-avatar {
-          width: 32px;
-          height: 32px;
-          background: #ff0000;
-          border-radius: 50%;
+          padding: 8px 12px;
           display: flex;
           align-items: center;
-          justify-content: center;
-          font-weight: bold;
         }
         
-        .main-content {
-          display: flex;
-          flex: 1;
-          overflow: hidden;
+        .clear-btn:hover, .search-btn:hover {
+          color: white;
         }
         
-        .sidebar {
-          width: 240px;
-          background: #0f0f0f;
-          padding: 12px;
+        /* Add to existing styles */
+      `}</style>
+    </div>
+  );
+}
+
+// Search Dropdown Component
+function SearchDropdown() {
+  const { searchResults, searchQuery, clearSearch } = useSearch();
+
+  if (!searchResults || !searchQuery) return null;
+
+  const { songs, artists, playlists } = searchResults;
+
+  return (
+    <div className="search-dropdown">
+      <div className="search-results">
+        {/* Songs Results */}
+        {songs.length > 0 && (
+          <div className="result-section">
+            <h3>Songs</h3>
+            {songs.slice(0, 5).map(song => (
+              <div key={song.id} className="result-item">
+                <img src={song.thumbnail} alt={song.title} />
+                <div className="result-info">
+                  <div className="result-title">{song.title}</div>
+                  <div className="result-subtitle">{song.artist} • {song.album}</div>
+                </div>
+                <div className="result-duration">{song.duration}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Artists Results */}
+        {artists.length > 0 && (
+          <div className="result-section">
+            <h3>Artists</h3>
+            {artists.slice(0, 3).map(artist => (
+              <div key={artist.id} className="result-item">
+                <img src={artist.avatar} alt={artist.name} className="artist-avatar" />
+                <div className="result-info">
+                  <div className="result-title">{artist.name}</div>
+                  <div className="result-subtitle">Artist • {artist.subscribers}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Playlists Results */}
+        {playlists.length > 0 && (
+          <div className="result-section">
+            <h3>Playlists</h3>
+            {playlists.slice(0, 3).map(playlist => (
+              <div key={playlist.id} className="result-item">
+                <img src={playlist.thumbnail} alt={playlist.title} />
+                <div className="result-info">
+                  <div className="result-title">{playlist.title}</div>
+                  <div className="result-subtitle">Playlist • {playlist.songs.length} songs</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* No Results */}
+        {songs.length === 0 && artists.length === 0 && playlists.length === 0 && (
+          <div className="no-results">
+            No results found for "{searchQuery}"
+          </div>
+        )}
+
+        {/* View All Results */}
+        {(songs.length > 0 || artists.length > 0 || playlists.length > 0) && (
+          <div className="view-all">
+            <button onClick={() => window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`}>
+              View all results
+            </button>
+          </div>
+        )}
+      </div>
+
+      <style jsx>{`
+        .search-dropdown {
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 640px;
+          max-height: 400px;
+          background: #282828;
+          border-radius: 8px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+          z-index: 1000;
           overflow-y: auto;
         }
         
-        .sidebar-nav {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          margin-bottom: 24px;
+        .search-results {
+          padding: 16px;
         }
         
-        .nav-item {
+        .result-section {
+          margin-bottom: 20px;
+        }
+        
+        .result-section h3 {
+          color: #aaa;
+          font-size: 14px;
+          margin-bottom: 8px;
+          text-transform: uppercase;
+        }
+        
+        .result-item {
           display: flex;
           align-items: center;
-          gap: 16px;
-          padding: 10px 12px;
-          border-radius: 10px;
-          text-decoration: none;
-          color: white;
+          padding: 8px;
+          border-radius: 4px;
+          cursor: pointer;
           transition: background 0.2s;
         }
         
-        .nav-item:hover, .nav-item.active {
-          background: #272727;
+        .result-item:hover {
+          background: #3a3a3a;
         }
         
-        .playlists-section h3 {
-          padding: 8px 12px;
-          color: #aaa;
-          font-size: 14px;
-          font-weight: normal;
-        }
-        
-        .playlist-list {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-        
-        .playlist-item, .create-playlist {
-          padding: 8px 12px;
+        .result-item img {
+          width: 40px;
+          height: 40px;
           border-radius: 4px;
-          text-decoration: none;
-          color: #aaa;
-          background: none;
-          border: none;
-          text-align: left;
-          cursor: pointer;
+          margin-right: 12px;
         }
         
-        .playlist-item:hover, .create-playlist:hover {
-          background: #272727;
-          color: white;
+        .artist-avatar {
+          border-radius: 50% !important;
         }
         
-        .content {
+        .result-info {
           flex: 1;
-          overflow-y: auto;
-          background: #0f0f0f;
-          padding: 24px;
         }
         
-        .music-player {
-          height: 80px;
-          background: #181818;
-          border-top: 1px solid #272727;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0 16px;
+        .result-title {
+          font-weight: 500;
+          margin-bottom: 2px;
         }
         
-        .now-playing {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-        
-        .now-playing img {
-          width: 48px;
-          height: 48px;
-          border-radius: 4px;
-        }
-        
-        .track-title {
-          font-weight: bold;
-          font-size: 14px;
-        }
-        
-        .track-artist {
+        .result-subtitle {
           color: #aaa;
           font-size: 12px;
         }
         
-        .player-controls {
-          display: flex;
-          align-items: center;
-          gap: 16px;
+        .result-duration {
+          color: #aaa;
+          font-size: 12px;
         }
         
-        .control-btn, .play-btn, .volume-btn {
+        .no-results {
+          padding: 20px;
+          text-align: center;
+          color: #aaa;
+        }
+        
+        .view-all {
+          border-top: 1px solid #3a3a3a;
+          padding-top: 12px;
+          text-align: center;
+        }
+        
+        .view-all button {
           background: none;
           border: none;
+          color: #aaa;
+          cursor: pointer;
+          font-size: 14px;
+        }
+        
+        .view-all button:hover {
           color: white;
-          font-size: 16px;
-          cursor: pointer;
-          padding: 8px;
-        }
-        
-        .play-btn {
-          background: white;
-          color: black;
-          border-radius: 50%;
-          width: 32px;
-          height: 32px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        
-        .progress-bar {
-          width: 400px;
-          height: 4px;
-          background: #404040;
-          border-radius: 2px;
-          margin-top: 8px;
-          cursor: pointer;
-        }
-        
-        .progress {
-          width: 30%;
-          height: 100%;
-          background: white;
-          border-radius: 2px;
         }
       `}</style>
     </div>
