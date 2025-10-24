@@ -22,7 +22,7 @@ export const musicLibrary = {
       artist: "Luna Star",
       album: "Night Skies",
       duration: "3:45",
-      audioUrl: "/audio/midnight-dreams.mp3",
+      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Laura%20%5BTygon%20On%20The%20Mix%5D.mp3",
       thumbnail: "/thumbnails/midnight-dreams.jpg",
       genre: "Chill",
       plays: 12450,
