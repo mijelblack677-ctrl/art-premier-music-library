@@ -4,14 +4,14 @@ export const musicLibrary = {
       id: 1,
       title: "Chill Vibes",
       description: "Relaxing tunes for your day",
-      thumbnail: "/thumbnails/chill-vibes.jpg",
+      thumbnail: "/api/placeholder/300/300/4A90E2/FFFFFF?text=Chill+Vibes",
       songs: [1, 2, 3]
     },
     {
       id: 2,
       title: "Workout Mix",
       description: "Energetic beats for your workout",
-      thumbnail: "/thumbnails/workout-mix.jpg",
+      thumbnail: "/api/placeholder/300/300/E94E77/FFFFFF?text=Workout+Mix",
       songs: [4, 5, 6]
     }
   ],
@@ -22,8 +22,8 @@ export const musicLibrary = {
       artist: "Luna Star",
       album: "Night Skies",
       duration: "3:45",
-      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Laura%20%5BTygon%20On%20The%20Mix%5D.mp3",
-      thumbnail: "/thumbnails/midnight-dreams.jpg",
+      audioUrl: "/api/placeholder/audio", // You'll replace this with real audio files
+      thumbnail: "/api/placeholder/300/300/1A1A2E/FFFFFF?text=Midnight+Dreams",
       genre: "Chill",
       plays: 12450,
       uploadDate: "2024-01-15"
@@ -34,8 +34,8 @@ export const musicLibrary = {
       artist: "Coastal Waves",
       album: "Beach Sessions",
       duration: "4:20",
-      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/MBORIOUS%20--%20Ndalandila%20yesu%20....%20official%20music.mp3",
-      thumbnail: "/thumbnails/ocean-breeze.jpg",
+      audioUrl: "/api/placeholder/audio",
+      thumbnail: "/api/placeholder/300/300/0F3460/FFFFFF?text=Ocean+Breeze",
       genre: "Ambient",
       plays: 8920,
       uploadDate: "2024-01-10"
@@ -46,8 +46,8 @@ export const musicLibrary = {
       artist: "Urban Pulse",
       album: "Metropolitan",
       duration: "3:15",
-      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Zendie_last_one.mp3",
-      thumbnail: "/thumbnails/city-lights.jpg",
+      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Mborious%20-%20mundimwetse-%20Official_Music_Video_(1080p)_mp4_Output_1.mp3",
+      thumbnail: "/api/placeholder/300/300/16213E/FFFFFF?text=City+Lights",
       genre: "Electronic",
       plays: 15670,
       uploadDate: "2024-01-08"
@@ -58,8 +58,8 @@ export const musicLibrary = {
       artist: "Power Drive",
       album: "Workout Essentials",
       duration: "2:50",
-      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Mborious%20-%20mundimwetse-%20Official_Music_Video_(1080p)_mp4_Output_1.mp3",
-      thumbnail: "/thumbnails/energy-boost.jpg",
+      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Zendie_last_one.mp3",
+      thumbnail: "/api/placeholder/300/300/E94E77/FFFFFF?text=Energy+Boost",
       genre: "EDM",
       plays: 23410,
       uploadDate: "2024-01-05"
@@ -70,8 +70,8 @@ export const musicLibrary = {
       artist: "Summit Seekers",
       album: "Altitude",
       duration: "3:30",
-      audioUrl: "/audio/mountain-high.mp3",
-      thumbnail: "/thumbnails/mountain-high.jpg",
+      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/MBORIOUS%20--%20Ndalandila%20yesu%20....%20official%20music.mp3",
+      thumbnail: "/api/placeholder/300/300/4ECDC4/FFFFFF?text=Mountain+High",
       genre: "Rock",
       plays: 18760,
       uploadDate: "2024-01-03"
@@ -82,8 +82,8 @@ export const musicLibrary = {
       artist: "Sandy Dunes",
       album: "Oasis",
       duration: "4:05",
-      audioUrl: "/audio/desert-wind.mp3",
-      thumbnail: "/thumbnails/desert-wind.jpg",
+      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Laura%20%5BTygon%20On%20The%20Mix%5D.mp3",
+      thumbnail: "/api/placeholder/300/300/F9C74F/FFFFFF?text=Desert+Wind",
       genre: "World",
       plays: 9560,
       uploadDate: "2024-01-01"
@@ -94,7 +94,7 @@ export const musicLibrary = {
       id: 1,
       name: "Luna Star",
       bio: "Electronic music producer creating dreamy soundscapes",
-      avatar: "/artists/luna-star.jpg",
+      avatar: "/api/placeholder/200/200/4A90E2/FFFFFF?text=LS",
       verified: true,
       subscribers: "125K"
     },
@@ -102,7 +102,7 @@ export const musicLibrary = {
       id: 2,
       name: "Coastal Waves",
       bio: "Ambient and chillwave artists from the west coast",
-      avatar: "/artists/coastal-waves.jpg",
+      avatar: "/api/placeholder/200/200/50E3C2/FFFFFF?text=CW",
       verified: true,
       subscribers: "89K"
     },
@@ -110,7 +110,7 @@ export const musicLibrary = {
       id: 3,
       name: "Urban Pulse",
       bio: "Electronic duo bringing city vibes to life",
-      avatar: "/artists/urban-pulse.jpg",
+      avatar: "/api/placeholder/200/200/16213E/FFFFFF?text=UP",
       verified: false,
       subscribers: "45K"
     },
@@ -118,7 +118,7 @@ export const musicLibrary = {
       id: 4,
       name: "Power Drive",
       bio: "High-energy EDM producers",
-      avatar: "/artists/power-drive.jpg",
+      avatar: "/api/placeholder/200/200/E94E77/FFFFFF?text=PD",
       verified: true,
       subscribers: "210K"
     },
@@ -126,7 +126,7 @@ export const musicLibrary = {
       id: 5,
       name: "Summit Seekers",
       bio: "Rock band inspired by mountain adventures",
-      avatar: "/artists/summit-seekers.jpg",
+      avatar: "/api/placeholder/200/200/4ECDC4/FFFFFF?text=SS",
       verified: false,
       subscribers: "67K"
     },
@@ -134,7 +134,7 @@ export const musicLibrary = {
       id: 6,
       name: "Sandy Dunes",
       bio: "World music fusion artists",
-      avatar: "/artists/sandy-dunes.jpg",
+      avatar: "/api/placeholder/200/200/F9C74F/FFFFFF?text=SD",
       verified: true,
       subscribers: "98K"
     }
