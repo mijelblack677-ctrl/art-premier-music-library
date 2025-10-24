@@ -34,7 +34,7 @@ export const musicLibrary = {
       artist: "Coastal Waves",
       album: "Beach Sessions",
       duration: "4:20",
-      audioUrl: "/audio/ocean-breeze.mp3",
+      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/MBORIOUS%20--%20Ndalandila%20yesu%20....%20official%20music.mp3",
       thumbnail: "/thumbnails/ocean-breeze.jpg",
       genre: "Ambient",
       plays: 8920,
