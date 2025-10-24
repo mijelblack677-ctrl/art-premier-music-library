@@ -1,74 +1,60 @@
-import { useState, useRef, useEffect } from 'react';
-import { FiPlay, FiPause, FiVolume2, FiSkipBack, FiSkipForward } from 'react-icons/fi';
+import { useState, useEffect } from 'react';
+import { FiPlay, FiPause, FiVolume2, FiSkipBack, FiSkipForward, FiHeart } from 'react-icons/fi';
+import { useMusic } from '../contexts/MusicContext';
 
-export default function AudioPlayer({ currentSong }) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1);
-  const audioRef = useRef(null);
+export default function AudioPlayer() {
+  const {
+    currentSong,
+    isPlaying,
+    currentTime,
+    duration,
+    volume,
+    togglePlay,
+    playNext,
+    playPrevious,
+    seekTo,
+    setVolumeLevel
+  } = useMusic();
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (audio && currentSong) {
-      audio.src = currentSong.audioUrl;
-      audio.load();
-      
-      const updateTime = () => setCurrentTime(audio.currentTime);
-      const updateDuration = () => setDuration(audio.duration);
-      
-      audio.addEventListener('timeupdate', updateTime);
-      audio.addEventListener('loadedmetadata', updateDuration);
-      
-      return () => {
-        audio.removeEventListener('timeupdate', updateTime);
-        audio.removeEventListener('loadedmetadata', updateDuration);
-      };
-    }
-  }, [currentSong]);
-
-  const togglePlay = () => {
-    const audio = audioRef.current;
-    if (audio) {
-      if (isPlaying) {
-        audio.pause();
-      } else {
-        audio.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
+  const [isLiked, setIsLiked] = useState(false);
 
   const handleSeek = (e) => {
-    const audio = audioRef.current;
-    if (audio) {
-      const seekTime = (e.nativeEvent.offsetX / e.target.offsetWidth) * duration;
-      audio.currentTime = seekTime;
-      setCurrentTime(seekTime);
-    }
+    const progressBar = e.currentTarget;
+    const clickPosition = (e.nativeEvent.offsetX / progressBar.offsetWidth);
+    const seekTime = clickPosition * duration;
+    seekTo(seekTime);
   };
 
   const handleVolumeChange = (e) => {
-    const audio = audioRef.current;
     const newVolume = parseFloat(e.target.value);
-    if (audio) {
-      audio.volume = newVolume;
-    }
-    setVolume(newVolume);
+    setVolumeLevel(newVolume);
   };
 
   const formatTime = (time) => {
+    if (!time || isNaN(time)) return '0:00';
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  if (!currentSong) return null;
+  const toggleLike = () => {
+    setIsLiked(!isLiked);
+    // Here you would typically update your database
+    console.log(`${currentSong?.title} ${isLiked ? 'unliked' : 'liked'}`);
+  };
+
+  if (!currentSong) {
+    return (
+      <div className="audio-player">
+        <div className="no-song">
+          <p>Select a song to play</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="audio-player">
-      <audio ref={audioRef} />
-      
       <div className="player-left">
         <div className="now-playing">
           <img src={currentSong.thumbnail} alt={currentSong.title} />
@@ -76,24 +62,30 @@ export default function AudioPlayer({ currentSong }) {
             <div className="track-title">{currentSong.title}</div>
             <div className="track-artist">{currentSong.artist}</div>
           </div>
+          <button 
+            className={`like-btn ${isLiked ? 'liked' : ''}`}
+            onClick={toggleLike}
+          >
+            <FiHeart />
+          </button>
         </div>
       </div>
       
       <div className="player-center">
         <div className="player-controls">
-          <button className="control-btn">
+          <button className="control-btn" onClick={playPrevious}>
             <FiSkipBack />
           </button>
           <button className="play-btn" onClick={togglePlay}>
             {isPlaying ? <FiPause /> : <FiPlay />}
           </button>
-          <button className="control-btn">
+          <button className="control-btn" onClick={playNext}>
             <FiSkipForward />
           </button>
         </div>
-        <div className="progress-container" onClick={handleSeek}>
+        <div className="progress-container">
           <span className="time-current">{formatTime(currentTime)}</span>
-          <div className="progress-bar">
+          <div className="progress-bar" onClick={handleSeek}>
             <div 
               className="progress" 
               style={{ width: `${(currentTime / duration) * 100}%` }}
@@ -115,6 +107,7 @@ export default function AudioPlayer({ currentSong }) {
             onChange={handleVolumeChange}
             className="volume-slider"
           />
+          <span className="volume-percent">{Math.round(volume * 100)}%</span>
         </div>
       </div>
 
@@ -130,8 +123,15 @@ export default function AudioPlayer({ currentSong }) {
           gap: 20px;
         }
         
+        .no-song {
+          width: 100%;
+          text-align: center;
+          color: #aaa;
+        }
+        
         .player-left {
           flex: 1;
+          min-width: 200px;
         }
         
         .now-playing {
@@ -144,16 +144,39 @@ export default function AudioPlayer({ currentSong }) {
           width: 56px;
           height: 56px;
           border-radius: 4px;
+          object-fit: cover;
+        }
+        
+        .track-info {
+          flex: 1;
         }
         
         .track-title {
           font-weight: bold;
           font-size: 14px;
+          margin-bottom: 2px;
         }
         
         .track-artist {
           color: #aaa;
           font-size: 12px;
+        }
+        
+        .like-btn {
+          background: none;
+          border: none;
+          color: #aaa;
+          cursor: pointer;
+          padding: 8px;
+          transition: color 0.2s;
+        }
+        
+        .like-btn:hover {
+          color: white;
+        }
+        
+        .like-btn.liked {
+          color: #1db954;
         }
         
         .player-center {
@@ -162,6 +185,7 @@ export default function AudioPlayer({ currentSong }) {
           flex-direction: column;
           align-items: center;
           gap: 8px;
+          max-width: 500px;
         }
         
         .player-controls {
@@ -179,6 +203,11 @@ export default function AudioPlayer({ currentSong }) {
           display: flex;
           align-items: center;
           justify-content: center;
+          transition: transform 0.1s;
+        }
+        
+        .control-btn:hover, .play-btn:hover {
+          transform: scale(1.1);
         }
         
         .play-btn {
@@ -194,7 +223,6 @@ export default function AudioPlayer({ currentSong }) {
           align-items: center;
           gap: 12px;
           width: 100%;
-          max-width: 500px;
         }
         
         .time-current, .time-total {
@@ -210,6 +238,11 @@ export default function AudioPlayer({ currentSong }) {
           border-radius: 2px;
           cursor: pointer;
           position: relative;
+          transition: height 0.2s;
+        }
+        
+        .progress-bar:hover {
+          height: 6px;
         }
         
         .progress {
@@ -223,6 +256,7 @@ export default function AudioPlayer({ currentSong }) {
           flex: 1;
           display: flex;
           justify-content: flex-end;
+          min-width: 150px;
         }
         
         .volume-control {
@@ -234,6 +268,12 @@ export default function AudioPlayer({ currentSong }) {
         
         .volume-slider {
           width: 80px;
+          cursor: pointer;
+        }
+        
+        .volume-percent {
+          font-size: 12px;
+          min-width: 30px;
         }
       `}</style>
     </div>
