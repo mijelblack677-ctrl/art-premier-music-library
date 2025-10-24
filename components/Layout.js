@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { FiHome, FiCompass, FiMusic, FiHeart, FiMenu, FiSearch, FiX } from 'react-icons/fi';
 import { useSearch } from '../contexts/SearchContext';
+import AudioPlayer from './AudioPlayer';
+import { musicLibrary } from '../data/music-library';
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -71,14 +73,102 @@ export default function Layout({ children }) {
       {/* Search Results Dropdown */}
       <SearchDropdown />
 
-      {/* Rest of the layout remains the same */}
       <div className="main-content">
-        {/* ... sidebar and main content ... */}
+        {/* Sidebar */}
+        {sidebarOpen && (
+          <aside className="sidebar">
+            <nav className="sidebar-nav">
+              <a href="/" className="nav-item active">
+                <FiHome />
+                <span>Home</span>
+              </a>
+              <a href="/explore" className="nav-item">
+                <FiCompass />
+                <span>Explore</span>
+              </a>
+              <a href="/library" className="nav-item">
+                <FiMusic />
+                <span>Your Library</span>
+              </a>
+              <a href="/liked" className="nav-item">
+                <FiHeart />
+                <span>Liked Songs</span>
+              </a>
+            </nav>
+            
+            <div className="playlists-section">
+              <h3>Playlists</h3>
+              <div className="playlist-list">
+                <a href="/playlist/chill" className="playlist-item">Chill Vibes</a>
+                <a href="/playlist/workout" className="playlist-item">Workout Mix</a>
+                <button className="create-playlist">+ Create playlist</button>
+              </div>
+            </div>
+          </aside>
+        )}
+
+        {/* Main Content */}
+        <main className="content">
+          {children}
+        </main>
       </div>
 
-      {/* ... music player ... */}
+      {/* Music Player */}
+      <AudioPlayer currentSong={musicLibrary.songs[0]} />
 
       <style jsx>{`
+        .layout {
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          background: #0f0f0f;
+          color: white;
+        }
+        
+        .header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 16px;
+          height: 56px;
+          background: #0f0f0f;
+          border-bottom: 1px solid #272727;
+          position: relative;
+        }
+        
+        .header-left {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+        
+        .menu-btn {
+          background: none;
+          border: none;
+          color: white;
+          font-size: 20px;
+          cursor: pointer;
+          padding: 8px;
+        }
+        
+        .logo {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 20px;
+          font-weight: bold;
+        }
+        
+        .logo-icon {
+          font-size: 24px;
+        }
+        
+        .header-center {
+          flex: 1;
+          max-width: 640px;
+          margin: 0 40px;
+        }
+        
         .search-bar {
           display: flex;
           align-items: center;
@@ -111,7 +201,104 @@ export default function Layout({ children }) {
           color: white;
         }
         
-        /* Add to existing styles */
+        .header-right {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+        
+        .upload-btn {
+          padding: 8px 16px;
+          background: #ff0000;
+          border: none;
+          border-radius: 20px;
+          color: white;
+          cursor: pointer;
+          font-weight: bold;
+        }
+        
+        .user-avatar {
+          width: 32px;
+          height: 32px;
+          background: #ff0000;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+        }
+        
+        .main-content {
+          display: flex;
+          flex: 1;
+          overflow: hidden;
+        }
+        
+        .sidebar {
+          width: 240px;
+          background: #0f0f0f;
+          padding: 12px;
+          overflow-y: auto;
+          border-right: 1px solid #272727;
+        }
+        
+        .sidebar-nav {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          margin-bottom: 24px;
+        }
+        
+        .nav-item {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          padding: 10px 12px;
+          border-radius: 10px;
+          text-decoration: none;
+          color: white;
+          transition: background 0.2s;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+          background: #272727;
+        }
+        
+        .playlists-section h3 {
+          padding: 8px 12px;
+          color: #aaa;
+          font-size: 14px;
+          font-weight: normal;
+        }
+        
+        .playlist-list {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        
+        .playlist-item, .create-playlist {
+          padding: 8px 12px;
+          border-radius: 4px;
+          text-decoration: none;
+          color: #aaa;
+          background: none;
+          border: none;
+          text-align: left;
+          cursor: pointer;
+        }
+        
+        .playlist-item:hover, .create-playlist:hover {
+          background: #272727;
+          color: white;
+        }
+        
+        .content {
+          flex: 1;
+          overflow-y: auto;
+          background: #0f0f0f;
+          padding: 24px;
+        }
       `}</style>
     </div>
   );
