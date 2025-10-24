@@ -83,7 +83,7 @@ export const musicLibrary = {
       album: "Oasis",
       duration: "3:25",
       audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Laura%20%5BTygon%20On%20The%20Mix%5D.mp3",
-      thumbnail: "./",
+      thumbnail: "./ChatGPT Image Oct 17, 2025, 08_54_55 AM.png",
       genre: "World",
       plays: 9560,
       uploadDate: "2024-01-01"
