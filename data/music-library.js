@@ -47,7 +47,7 @@ export const musicLibrary = {
       album: "None",
       duration: "2:56",
       audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Mborious%20-%20mundimwetse-%20Official_Music_Video_(1080p)_mp4_Output_1.mp3",
-      thumbnail: "/557706318_122123872796965203_2657091422275619840_n.jpg",
+      thumbnail: "https://github.com/mijelblack677-ctrl/art-premier-music-library/blob/a4247beff3241154777d4349cf54d020b5781d5e/557706318_122123872796965203_2657091422275619840_n.jpg",
       genre: "Electronic",
       plays: 15670,
       uploadDate: "2024-01-08"
