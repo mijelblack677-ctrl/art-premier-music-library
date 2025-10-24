@@ -46,7 +46,7 @@ export const musicLibrary = {
       artist: "Urban Pulse",
       album: "Metropolitan",
       duration: "3:15",
-      audioUrl: "/audio/city-lights.mp3",
+      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Zendie_last_one.mp3",
       thumbnail: "/thumbnails/city-lights.jpg",
       genre: "Electronic",
       plays: 15670,
