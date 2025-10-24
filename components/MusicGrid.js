@@ -1,4 +1,4 @@
-import { FiPlay, FiHeart, FiMoreHorizontal } from 'react-icons/fi';
+import { FiPlay, FiPause, FiHeart, FiMoreHorizontal } from 'react-icons/fi';
 import { useMusic } from '../contexts/MusicContext';
 
 export default function MusicGrid({ songs }) {
@@ -82,7 +82,8 @@ export default function MusicGrid({ songs }) {
         }
         
         .song-card.active {
-          background: #1db954;
+          background: #282828;
+          border: 1px solid #1db954;
         }
         
         .song-image {
@@ -116,6 +117,10 @@ export default function MusicGrid({ songs }) {
           opacity: 1;
         }
         
+        .song-card.active .song-overlay {
+          opacity: 1;
+        }
+        
         .play-btn {
           background: #1db954;
           border: none;
@@ -131,7 +136,8 @@ export default function MusicGrid({ songs }) {
           transition: transform 0.2s;
         }
         
-        .song-card:hover .play-btn {
+        .song-card:hover .play-btn,
+        .song-card.active .play-btn {
           transform: scale(1);
         }
         
