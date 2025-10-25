@@ -30,15 +30,15 @@ export const musicLibrary = {
     },
     {
       id: 2,
-      title: "Ocean Breeze",
-      artist: "Coastal Waves",
-      album: "Beach Sessions",
+      title: "Olo",
+      artist: "Oh Rious",
+      album: "New",
       duration: "4:20",
-      audioUrl: "/api/placeholder/audio",
+      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Oh%20Rious%20-%20Olo.mp3",
       thumbnail: "/api/placeholder/300/300/0F3460/FFFFFF?text=Ocean+Breeze",
       genre: "Ambient",
-      plays: 8920,
-      uploadDate: "2024-01-10"
+      plays: 20,
+      uploadDate: "2025-09-25"
     },
     {
       id: 3,
