@@ -18,14 +18,14 @@ export const musicLibrary = {
   songs: [
     {
       id: 1,
-      title: "Midnight Dreams",
-      artist: "Luna Star",
+      title: "Ndimakhala busy",
+      artist: "B-JAY, martse,...",
       album: "Night Skies",
       duration: "3:45",
-      audioUrl: "/api/placeholder/audio", // You'll replace this with real audio files
+      audioUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/BEEJAY%20-%20NDIMAKHALA%20BUSY%20ft.%20%20MACELBA,%20ACE%20JIZZY,%20MARTSE,%20KRAZIE%20G,%20VIRUS,%20CRISPY%20MW.mp3", // You'll replace this with real audio files
       thumbnail: "/api/placeholder/300/300/1A1A2E/FFFFFF?text=Midnight+Dreams",
-      genre: "Chill",
-      plays: 12450,
+      genre: "hiphop",
+      plays: 1250,
       uploadDate: "2024-01-15"
     },
     {
