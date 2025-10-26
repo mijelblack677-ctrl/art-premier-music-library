@@ -20,6 +20,7 @@
             --light: #f5f6fa;
             --success: #00b894;
             --danger: #e84393;
+            --warning: #fdcb6e;
             --card-bg: #1e1e2e;
             --player-bg: #0f0f23;
         }
@@ -231,7 +232,7 @@
             align-items: center;
         }
 
-        .play-btn, .download-btn {
+        .play-btn, .download-btn, .like-btn {
             padding: 8px 15px;
             border-radius: 20px;
             border: none;
@@ -261,6 +262,24 @@
         .download-btn:hover {
             background: var(--success);
             color: white;
+        }
+
+        .like-btn {
+            background: transparent;
+            color: #666;
+            border: 1px solid #666;
+        }
+
+        .like-btn:hover, .like-btn.liked {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .like-count {
+            font-size: 0.8rem;
+            color: #666;
+            margin-left: 5px;
         }
 
         .download-progress {
@@ -334,9 +353,14 @@
             font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            padding: 8px;
         }
 
         .control-btn:hover {
+            color: var(--primary);
+        }
+
+        .control-btn.active {
             color: var(--primary);
         }
 
@@ -402,7 +426,30 @@
             width: 100px;
         }
 
-        /* Download Modal */
+        /* Feedback Button */
+        .feedback-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-btn:hover {
+            background: var(--secondary);
+            transform: scale(1.1);
+        }
+
+        /* Modals */
         .modal {
             display: none;
             position: fixed;
@@ -455,6 +502,92 @@
             color: white;
         }
 
+        /* Feedback Form */
+        .feedback-form {
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background: #2d2d44;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: var(--secondary);
+        }
+
+        /* Comments Section */
+        .comments-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+        }
+
+        .comment {
+            padding: 15px;
+            border-bottom: 1px solid #444;
+            margin-bottom: 15px;
+        }
+
+        .comment:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .comment-date {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .comment-text {
+            color: #ccc;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .navbar {
@@ -490,6 +623,14 @@
 
             .player-options {
                 justify-content: center;
+            }
+
+            .feedback-btn {
+                bottom: 120px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
             }
         }
 
@@ -562,6 +703,19 @@
         </div>
     </section>
 
+    <!-- Comments Section -->
+    <section class="container comments-section">
+        <h2 class="section-title">Community Feedback</h2>
+        <div id="comments-container">
+            <!-- Comments will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Feedback Button -->
+    <button class="feedback-btn" id="feedback-btn">
+        <i class="fas fa-envelope"></i>
+    </button>
+
     <!-- Music Player -->
     <div class="player">
         <div class="container">
@@ -575,9 +729,21 @@
                 </div>
                 <div class="player-controls">
                     <div class="control-buttons">
-                        <button class="control-btn"><i class="fas fa-step-backward"></i></button>
-                        <button class="control-btn play-pause" id="play-pause-btn"><i class="fas fa-play"></i></button>
-                        <button class="control-btn"><i class="fas fa-step-forward"></i></button>
+                        <button class="control-btn" id="shuffle-btn" title="Shuffle">
+                            <i class="fas fa-random"></i>
+                        </button>
+                        <button class="control-btn" id="prev-btn">
+                            <i class="fas fa-step-backward"></i>
+                        </button>
+                        <button class="control-btn play-pause" id="play-pause-btn">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="control-btn" id="next-btn">
+                            <i class="fas fa-step-forward"></i>
+                        </button>
+                        <button class="control-btn" id="repeat-btn" title="Repeat">
+                            <i class="fas fa-redo"></i>
+                        </button>
                     </div>
                     <div class="progress-container">
                         <span class="time" id="current-time">0:00</span>
@@ -592,6 +758,9 @@
                         <i class="fas fa-volume-up"></i>
                         <input type="range" min="0" max="100" value="70" class="volume-slider" id="volume-slider">
                     </div>
+                    <button class="like-btn" id="player-like-btn">
+                        <i class="far fa-heart"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -607,6 +776,28 @@
                 <button class="modal-btn confirm-download" id="confirm-download">Download</button>
                 <button class="modal-btn cancel-download" id="cancel-download">Cancel</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div class="modal" id="feedback-modal">
+        <div class="modal-content">
+            <h3>Send Feedback</h3>
+            <form class="feedback-form" id="feedback-form">
+                <div class="form-group">
+                    <label for="feedback-name">Your Name</label>
+                    <input type="text" id="feedback-name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="feedback-email">Your Email</label>
+                    <input type="email" id="feedback-email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="feedback-message">Your Message</label>
+                    <textarea id="feedback-message" placeholder="Tell us what you think about MelodyHub..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Feedback</button>
+            </form>
         </div>
     </div>
 
@@ -627,6 +818,7 @@
                     thumbnail: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                     genre: "Hip Hop",
                     plays: 1250,
+                    likes: 42,
                     downloadUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/BEEJAY%20-%20NDIMAKHALA%20BUSY%20ft.%20%20MACELBA,%20ACE%20JIZZY,%20MARTSE,%20KRAZIE%20G,%20VIRUS,%20CRISPY%20MW.mp3"
                 },
                 {
@@ -639,6 +831,7 @@
                     thumbnail: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                     genre: "Afrobeat",
                     plays: 892,
+                    likes: 31,
                     downloadUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Oh%20Rious%20-%20Olo.mp3"
                 },
                 {
@@ -651,6 +844,7 @@
                     thumbnail: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                     genre: "Gospel",
                     plays: 15670,
+                    likes: 89,
                     downloadUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Mborious%20-%20mundimwetse-%20Official_Music_Video_(1080p)_mp4_Output_1.mp3"
                 },
                 {
@@ -663,6 +857,7 @@
                     thumbnail: "https://images.unsplash.com/photo-1571974599782-87624638275f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                     genre: "Hip Hop",
                     plays: 23410,
+                    likes: 67,
                     downloadUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Zendie_last_one.mp3"
                 },
                 {
@@ -675,6 +870,7 @@
                     thumbnail: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                     genre: "Gospel",
                     plays: 18760,
+                    likes: 124,
                     downloadUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/MBORIOUS%20--%20Ndalandila%20yesu%20....%20official%20music.mp3"
                 },
                 {
@@ -687,6 +883,7 @@
                     thumbnail: "https://images.unsplash.com/photo-1494232410401-ad00d5433cfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
                     genre: "R&B",
                     plays: 9560,
+                    likes: 53,
                     downloadUrl: "https://github.com/mijelblack677-ctrl/art-premier-music-library/raw/refs/heads/main/Laura%20%5BTygon%20On%20The%20Mix%5D.mp3"
                 }
             ]
@@ -708,16 +905,31 @@
         const downloadSongName = document.getElementById('download-song-name');
         const confirmDownload = document.getElementById('confirm-download');
         const cancelDownload = document.getElementById('cancel-download');
+        const feedbackBtn = document.getElementById('feedback-btn');
+        const feedbackModal = document.getElementById('feedback-modal');
+        const feedbackForm = document.getElementById('feedback-form');
+        const shuffleBtn = document.getElementById('shuffle-btn');
+        const repeatBtn = document.getElementById('repeat-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const playerLikeBtn = document.getElementById('player-like-btn');
+        const commentsContainer = document.getElementById('comments-container');
 
         // Player State
         let currentSong = null;
         let isPlaying = false;
         let currentDownloadUrl = '';
+        let shuffleMode = false;
+        let repeatMode = false; // false = off, true = all, 'one' = repeat one
+        let currentPlaylist = [];
+        let currentIndex = 0;
+        let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
 
         // Initialize Music Grid
         function initializeMusicGrid() {
             musicGrid.innerHTML = '';
             musicLibrary.songs.forEach(song => {
+                const isLiked = likedSongs.includes(song.id);
                 const card = document.createElement('div');
                 card.className = 'music-card';
                 card.innerHTML = `
@@ -732,6 +944,10 @@
                             <button class="download-btn" data-id="${song.id}">
                                 <i class="fas fa-download"></i> Download
                             </button>
+                            <button class="like-btn ${isLiked ? 'liked' : ''}" data-id="${song.id}">
+                                <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
+                                <span class="like-count">${song.likes}</span>
+                            </button>
                         </div>
                     </div>
                     <div class="download-progress" id="progress-${song.id}"></div>
@@ -739,7 +955,7 @@
                 musicGrid.appendChild(card);
             });
 
-            // Add event listeners to play buttons
+            // Add event listeners
             document.querySelectorAll('.play-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -748,7 +964,6 @@
                 });
             });
 
-            // Add event listeners to download buttons
             document.querySelectorAll('.download-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -756,14 +971,25 @@
                     showDownloadModal(songId);
                 });
             });
+
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const songId = parseInt(btn.getAttribute('data-id'));
+                    toggleLike(songId, btn);
+                });
+            });
         }
 
         // Play Song
-        function playSong(songId) {
-            const song = musicLibrary.songs.find(s => s.id === songId);
+        function playSong(songId, playlist = musicLibrary.songs, index = 0) {
+            const song = playlist.find(s => s.id === songId);
             if (!song) return;
 
             currentSong = song;
+            currentPlaylist = playlist;
+            currentIndex = playlist.findIndex(s => s.id === songId);
+            
             audioPlayer.src = song.audioUrl;
             audioPlayer.play();
             isPlaying = true;
@@ -774,8 +1000,82 @@
             currentTitle.textContent = song.title;
             currentArtist.textContent = song.artist;
 
+            // Update like button state
+            updatePlayerLikeButton();
+
             // Update play count (simulated)
             song.plays += 1;
+        }
+
+        // Toggle Like
+        function toggleLike(songId, button = null) {
+            const songIndex = likedSongs.indexOf(songId);
+            const song = musicLibrary.songs.find(s => s.id === songId);
+            
+            if (songIndex === -1) {
+                // Like the song
+                likedSongs.push(songId);
+                song.likes += 1;
+                if (button) {
+                    button.classList.add('liked');
+                    button.innerHTML = `<i class="fas fa-heart"></i><span class="like-count">${song.likes}</span>`;
+                }
+            } else {
+                // Unlike the song
+                likedSongs.splice(songIndex, 1);
+                song.likes -= 1;
+                if (button) {
+                    button.classList.remove('liked');
+                    button.innerHTML = `<i class="far fa-heart"></i><span class="like-count">${song.likes}</span>`;
+                }
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
+            updatePlayerLikeButton();
+        }
+
+        // Update Player Like Button
+        function updatePlayerLikeButton() {
+            if (!currentSong) return;
+            
+            const isLiked = likedSongs.includes(currentSong.id);
+            playerLikeBtn.classList.toggle('liked', isLiked);
+            playerLikeBtn.innerHTML = isLiked ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
+        }
+
+        // Shuffle Playlist
+        function shufflePlaylist() {
+            const shuffled = [...currentPlaylist];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            currentPlaylist = shuffled;
+            currentIndex = currentPlaylist.findIndex(song => song.id === currentSong.id);
+        }
+
+        // Next Song
+        function nextSong() {
+            if (currentPlaylist.length === 0) return;
+            
+            if (shuffleMode) {
+                currentIndex = Math.floor(Math.random() * currentPlaylist.length);
+            } else {
+                currentIndex = (currentIndex + 1) % currentPlaylist.length;
+            }
+            
+            const nextSong = currentPlaylist[currentIndex];
+            playSong(nextSong.id, currentPlaylist, currentIndex);
+        }
+
+        // Previous Song
+        function previousSong() {
+            if (currentPlaylist.length === 0) return;
+            
+            currentIndex = (currentIndex - 1 + currentPlaylist.length) % currentPlaylist.length;
+            const prevSong = currentPlaylist[currentIndex];
+            playSong(prevSong.id, currentPlaylist, currentIndex);
         }
 
         // Show Download Modal
@@ -826,6 +1126,60 @@
             hideDownloadModal();
         }
 
+        // Show Feedback Modal
+        function showFeedbackModal() {
+            feedbackModal.style.display = 'flex';
+        }
+
+        // Hide Feedback Modal
+        function hideFeedbackModal() {
+            feedbackModal.style.display = 'none';
+            feedbackForm.reset();
+        }
+
+        // Submit Feedback
+        function submitFeedback(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('feedback-name').value;
+            const email = document.getElementById('feedback-email').value;
+            const message = document.getElementById('feedback-message').value;
+
+            // Create mailto link (this will open user's email client)
+            const subject = `Feedback from ${name} - MelodyHub`;
+            const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0AMessage:%0D%0A${message}`;
+            
+            window.location.href = `mailto:mijelblack677@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            
+            // Show success message
+            alert('Thank you for your feedback! Your email client will open to send the message.');
+            hideFeedbackModal();
+        }
+
+        // Load Comments (simulated)
+        function loadComments() {
+            const comments = JSON.parse(localStorage.getItem('musicComments')) || [];
+            commentsContainer.innerHTML = '';
+            
+            if (comments.length === 0) {
+                commentsContainer.innerHTML = '<p>No comments yet. Be the first to share your thoughts!</p>';
+                return;
+            }
+            
+            comments.forEach(comment => {
+                const commentEl = document.createElement('div');
+                commentEl.className = 'comment';
+                commentEl.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-author">${comment.name}</span>
+                        <span class="comment-date">${new Date(comment.date).toLocaleDateString()}</span>
+                    </div>
+                    <div class="comment-text">${comment.message}</div>
+                `;
+                commentsContainer.appendChild(commentEl);
+            });
+        }
+
         // Event Listeners
         playPauseBtn.addEventListener('click', () => {
             if (!currentSong) return;
@@ -852,6 +1206,20 @@
             progress.style.width = `${(currentTime / duration) * 100}%`;
         });
 
+        audioPlayer.addEventListener('ended', () => {
+            if (repeatMode === 'one') {
+                audioPlayer.currentTime = 0;
+                audioPlayer.play();
+            } else if (repeatMode || shuffleMode) {
+                nextSong();
+            } else if (currentIndex < currentPlaylist.length - 1) {
+                nextSong();
+            } else {
+                isPlaying = false;
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+
         progressBar.addEventListener('click', (e) => {
             if (!currentSong) return;
             
@@ -864,14 +1232,45 @@
             audioPlayer.volume = volumeSlider.value / 100;
         });
 
+        shuffleBtn.addEventListener('click', () => {
+            shuffleMode = !shuffleMode;
+            shuffleBtn.classList.toggle('active', shuffleMode);
+        });
+
+        repeatBtn.addEventListener('click', () => {
+            if (!repeatMode) {
+                repeatMode = true;
+                repeatBtn.classList.add('active');
+            } else if (repeatMode === true) {
+                repeatMode = 'one';
+                repeatBtn.innerHTML = '<i class="fas fa-redo-alt"></i>';
+            } else {
+                repeatMode = false;
+                repeatBtn.classList.remove('active');
+                repeatBtn.innerHTML = '<i class="fas fa-redo"></i>';
+            }
+        });
+
+        prevBtn.addEventListener('click', previousSong);
+        nextBtn.addEventListener('click', nextSong);
+        playerLikeBtn.addEventListener('click', () => {
+            if (currentSong) {
+                toggleLike(currentSong.id);
+            }
+        });
+
         confirmDownload.addEventListener('click', downloadSong);
         cancelDownload.addEventListener('click', hideDownloadModal);
+        feedbackBtn.addEventListener('click', showFeedbackModal);
+        feedbackForm.addEventListener('submit', submitFeedback);
 
-        // Close modal when clicking outside
-        downloadModal.addEventListener('click', (e) => {
-            if (e.target === downloadModal) {
-                hideDownloadModal();
-            }
+        // Close modals when clicking outside
+        [downloadModal, feedbackModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
         });
 
         // Format time helper
@@ -897,6 +1296,7 @@
             if (query) {
                 musicGrid.innerHTML = '';
                 filteredSongs.forEach(song => {
+                    const isLiked = likedSongs.includes(song.id);
                     const card = document.createElement('div');
                     card.className = 'music-card';
                     card.innerHTML = `
@@ -911,6 +1311,10 @@
                                 <button class="download-btn" data-id="${song.id}">
                                     <i class="fas fa-download"></i> Download
                                 </button>
+                                <button class="like-btn ${isLiked ? 'liked' : ''}" data-id="${song.id}">
+                                    <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
+                                    <span class="like-count">${song.likes}</span>
+                                </button>
                             </div>
                         </div>
                         <div class="download-progress" id="progress-${song.id}"></div>
@@ -923,7 +1327,7 @@
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
                         const songId = parseInt(btn.getAttribute('data-id'));
-                        playSong(songId);
+                        playSong(songId, filteredSongs);
                     });
                 });
 
@@ -934,6 +1338,14 @@
                         showDownloadModal(songId);
                     });
                 });
+
+                document.querySelectorAll('.like-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const songId = parseInt(btn.getAttribute('data-id'));
+                        toggleLike(songId, btn);
+                    });
+                });
             } else {
                 initializeMusicGrid();
             }
@@ -941,6 +1353,7 @@
 
         // Initialize the app
         initializeMusicGrid();
+        loadComments();
     </script>
 </body>
 </html>
