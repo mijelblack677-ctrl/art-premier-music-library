@@ -996,14 +996,378 @@
 
         // Play Song
         function playSong(songId, playlist = musicLibrary.songs, index = 0) {
-            // ... (rest of script unchanged)
+            const song = playlist.find(s => s.id === songId);
+            if (!song) return;
+
+            currentSong = song;
+            currentPlaylist = playlist;
+            currentIndex = playlist.findIndex(s => s.id === songId);
+            
+            audioPlayer.src = song.audioUrl;
+            audioPlayer.play();
+            isPlaying = true;
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+
+            // Update player UI
+            currentArtwork.src = song.thumbnail;
+            currentTitle.textContent = song.title;
+            currentArtist.textContent = song.artist;
+
+            // Update like button state
+            updatePlayerLikeButton();
+
+            // Update play count (simulated)
+            song.plays += 1;
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeMusicGrid();
-            // ... (rest of initialization)
+        // Toggle Like
+        function toggleLike(songId, button = null) {
+            const songIndex = likedSongs.indexOf(songId);
+            const song = musicLibrary.songs.find(s => s.id === songId);
+            
+            if (songIndex === -1) {
+                // Like the song
+                likedSongs.push(songId);
+                song.likes += 1;
+                if (button) {
+                    button.classList.add('liked');
+                    button.innerHTML = `<i class="fas fa-heart"></i><span class="like-count">${song.likes}</span>`;
+                }
+            } else {
+                // Unlike the song
+                likedSongs.splice(songIndex, 1);
+                song.likes -= 1;
+                if (button) {
+                    button.classList.remove('liked');
+                    button.innerHTML = `<i class="far fa-heart"></i><span class="like-count">${song.likes}</span>`;
+                }
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
+            updatePlayerLikeButton();
+        }
+
+        // Update Player Like Button
+        function updatePlayerLikeButton() {
+            if (!currentSong) return;
+            
+            const isLiked = likedSongs.includes(currentSong.id);
+            playerLikeBtn.classList.toggle('liked', isLiked);
+            playerLikeBtn.innerHTML = isLiked ? '<i class="fas fa-heart"></i>' : '<i class="far fa-heart"></i>';
+        }
+
+        // Shuffle Playlist
+        function shufflePlaylist() {
+            const shuffled = [...currentPlaylist];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            currentPlaylist = shuffled;
+            currentIndex = currentPlaylist.findIndex(song => song.id === currentSong.id);
+        }
+
+        // Next Song
+        function nextSong() {
+            if (currentPlaylist.length === 0) return;
+            
+            if (shuffleMode) {
+                currentIndex = Math.floor(Math.random() * currentPlaylist.length);
+            } else {
+                currentIndex = (currentIndex + 1) % currentPlaylist.length;
+            }
+            
+            const nextSong = currentPlaylist[currentIndex];
+            playSong(nextSong.id, currentPlaylist, currentIndex);
+        }
+
+        // Previous Song
+        function previousSong() {
+            if (currentPlaylist.length === 0) return;
+            
+            currentIndex = (currentIndex - 1 + currentPlaylist.length) % currentPlaylist.length;
+            const prevSong = currentPlaylist[currentIndex];
+            playSong(prevSong.id, currentPlaylist, currentIndex);
+        }
+
+        // Show Download Modal
+        function showDownloadModal(songId) {
+            const song = musicLibrary.songs.find(s => s.id === songId);
+            if (!song) return;
+
+            downloadSongName.textContent = `${song.title} - ${song.artist}`;
+            currentDownloadUrl = song.downloadUrl;
+            downloadModal.style.display = 'flex';
+        }
+
+        // Hide Download Modal
+        function hideDownloadModal() {
+            downloadModal.style.display = 'none';
+            currentDownloadUrl = '';
+        }
+
+        // Download Song
+        function downloadSong() {
+            if (!currentDownloadUrl) return;
+
+            // Create a temporary anchor element to trigger download
+            const a = document.createElement('a');
+            a.href = currentDownloadUrl;
+            a.download = currentDownloadUrl.split('/').pop();
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            // Show download progress (simulated)
+            const songId = musicLibrary.songs.find(s => s.downloadUrl === currentDownloadUrl)?.id;
+            if (songId) {
+                const progressBar = document.getElementById(`progress-${songId}`);
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    progressBar.style.width = `${progress}%`;
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            progressBar.style.width = '0%';
+                        }, 1000);
+                    }
+                }, 50);
+            }
+
+            hideDownloadModal();
+        }
+
+        // Show Feedback Modal
+        function showFeedbackModal() {
+            feedbackModal.style.display = 'flex';
+        }
+
+        // Hide Feedback Modal
+        function hideFeedbackModal() {
+            feedbackModal.style.display = 'none';
+            feedbackForm.reset();
+        }
+
+        // Submit Feedback
+        function submitFeedback(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('feedback-name').value;
+            const email = document.getElementById('feedback-email').value;
+            const message = document.getElementById('feedback-message').value;
+
+            // Create mailto link (this will open user's email client)
+            const subject = `Feedback from ${name} - MelodyHub`;
+            const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0AMessage:%0D%0A${message}`;
+            
+            window.location.href = `mailto:mijelblack677@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            
+            // Show success message
+            alert('Thank you for your feedback! Your email client will open to send the message.');
+            hideFeedbackModal();
+        }
+
+        // Load Comments (simulated)
+        function loadComments() {
+            const comments = JSON.parse(localStorage.getItem('musicComments')) || [];
+            commentsContainer.innerHTML = '';
+            
+            if (comments.length === 0) {
+                commentsContainer.innerHTML = '<p>No comments yet. Be the first to share your thoughts!</p>';
+                return;
+            }
+            
+            comments.forEach(comment => {
+                const commentEl = document.createElement('div');
+                commentEl.className = 'comment';
+                commentEl.innerHTML = `
+                    <div class="comment-header">
+                        <span class="comment-author">${comment.name}</span>
+                        <span class="comment-date">${new Date(comment.date).toLocaleDateString()}</span>
+                    </div>
+                    <div class="comment-text">${comment.message}</div>
+                `;
+                commentsContainer.appendChild(commentEl);
+            });
+        }
+
+        // Event Listeners
+        playPauseBtn.addEventListener('click', () => {
+            if (!currentSong) return;
+
+            if (isPlaying) {
+                audioPlayer.pause();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            } else {
+                audioPlayer.play();
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            isPlaying = !isPlaying;
         });
+
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            durationEl.textContent = formatTime(audioPlayer.duration);
+        });
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            const currentTime = audioPlayer.currentTime;
+            const duration = audioPlayer.duration;
+            
+            currentTimeEl.textContent = formatTime(currentTime);
+            progress.style.width = `${(currentTime / duration) * 100}%`;
+        });
+
+        audioPlayer.addEventListener('ended', () => {
+            if (repeatMode === 'one') {
+                audioPlayer.currentTime = 0;
+                audioPlayer.play();
+            } else if (repeatMode || shuffleMode) {
+                nextSong();
+            } else if (currentIndex < currentPlaylist.length - 1) {
+                nextSong();
+            } else {
+                isPlaying = false;
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+
+        progressBar.addEventListener('click', (e) => {
+            if (!currentSong) return;
+            
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audioPlayer.currentTime = percent * audioPlayer.duration;
+        });
+
+        volumeSlider.addEventListener('input', () => {
+            audioPlayer.volume = volumeSlider.value / 100;
+        });
+
+        shuffleBtn.addEventListener('click', () => {
+            shuffleMode = !shuffleMode;
+            shuffleBtn.classList.toggle('active', shuffleMode);
+        });
+
+        repeatBtn.addEventListener('click', () => {
+            if (!repeatMode) {
+                repeatMode = true;
+                repeatBtn.classList.add('active');
+            } else if (repeatMode === true) {
+                repeatMode = 'one';
+                repeatBtn.innerHTML = '<i class="fas fa-redo-alt"></i>';
+            } else {
+                repeatMode = false;
+                repeatBtn.classList.remove('active');
+                repeatBtn.innerHTML = '<i class="fas fa-redo"></i>';
+            }
+        });
+
+        prevBtn.addEventListener('click', previousSong);
+        nextBtn.addEventListener('click', nextSong);
+        playerLikeBtn.addEventListener('click', () => {
+            if (currentSong) {
+                toggleLike(currentSong.id);
+            }
+        });
+
+        confirmDownload.addEventListener('click', downloadSong);
+        cancelDownload.addEventListener('click', hideDownloadModal);
+        feedbackBtn.addEventListener('click', showFeedbackModal);
+        feedbackForm.addEventListener('submit', submitFeedback);
+
+        // Close modals when clicking outside
+        [downloadModal, feedbackModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+
+        // Format time helper
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-bar input');
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filteredSongs = musicLibrary.songs.filter(song => 
+                song.title.toLowerCase().includes(query) || 
+                song.artist.toLowerCase().includes(query) ||
+                song.genre.toLowerCase().includes(query)
+            );
+            
+            // Re-render music grid with filtered results
+            if (query) {
+                musicGrid.innerHTML = '';
+                filteredSongs.forEach(song => {
+                    const isLiked = likedSongs.includes(song.id);
+                    const card = document.createElement('div');
+                    card.className = 'music-card';
+                    card.innerHTML = `
+                        <img src="${song.thumbnail}" alt="${song.title}" class="album-art">
+                        <div class="music-info">
+                            <h3 class="music-title">${song.title}</h3>
+                            <p class="music-artist">${song.artist}</p>
+                            <div class="music-actions">
+                                <button class="play-btn" data-id="${song.id}">
+                                    <i class="fas fa-play"></i> Play
+                                </button>
+                                <button class="download-btn" data-id="${song.id}">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                                <button class="like-btn ${isLiked ? 'liked' : ''}" data-id="${song.id}">
+                                    <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
+                                    <span class="like-count">${song.likes}</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="download-progress" id="progress-${song.id}"></div>
+                    `;
+                    musicGrid.appendChild(card);
+                });
+
+                // Re-attach event listeners
+                document.querySelectorAll('.play-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const songId = parseInt(btn.getAttribute('data-id'));
+                        playSong(songId, filteredSongs);
+                    });
+                });
+
+                document.querySelectorAll('.download-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const songId = parseInt(btn.getAttribute('data-id'));
+                        showDownloadModal(songId);
+                    });
+                });
+
+                document.querySelectorAll('.like-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const songId = parseInt(btn.getAttribute('data-id'));
+                        toggleLike(songId, btn);
+                    });
+                });
+            } else {
+                initializeMusicGrid();
+            }
+        });
+
+        // Initialize the app
+        initializeMusicGrid();
+        loadComments();
     </script>
 </body>
 </html>
+
